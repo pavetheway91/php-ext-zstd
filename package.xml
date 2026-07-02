@@ -10,10 +10,10 @@
   <email>kjdev@php.net</email>
   <active>yes</active>
  </lead>
- <date>2026-06-05</date>
+ <date>2026-07-02</date>
  <version>
-  <release>0.16.0</release>
-  <api>0.16.0</api>
+  <release>0.17.0</release>
+  <api>0.17.0</api>
  </version>
  <stability>
   <release>stable</release>
@@ -21,9 +21,9 @@
  </stability>
  <license>MIT</license>
  <notes>
-- add: configurable compression level for APCu serializer (zstd.apcu_compression_level)
-- fix: undefined behavior in zstd_uncompress_add by switching to smart_str API
-- fix: build on PHP 8.6+
+- add: MIME type exclusion for output compression (zstd.output_compression_exclude_types)
+- add: explicit --enable-apcu / --disable-apcu config.m4 options
+- fix: in-tree builds with apcu
  </notes>
  <contents>
   <dir name="/">
@@ -166,6 +166,10 @@
     <file name="ob_dcz_003.phpt" role="test" />
     <file name="ob_dcz_004.phpt" role="test" />
     <file name="ob_dcz_005.phpt" role="test" />
+    <file name="ob_exclude_001.phpt" role="test" />
+    <file name="ob_exclude_002.phpt" role="test" />
+    <file name="ob_exclude_003.phpt" role="test" />
+    <file name="ob_exclude_004.phpt" role="test" />
     <file name="ob_skipif.inc" role="test" />
     <file name="streaming.zst" role="test" />
     <file name="streams_1.phpt" role="test" />
