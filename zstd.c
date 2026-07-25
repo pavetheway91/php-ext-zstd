@@ -82,9 +82,6 @@ static zend_always_inline zend_string *smart_str_extract(smart_str *str) {
     UNEXPECTED(ZSTD_isError(result))
 
 zend_class_entry *zstd_context_ptr;
-static const zend_function_entry zstd_context_methods[] = {
-    ZEND_FE_END
-};
 
 struct _php_zstd_context {
     ZSTD_CCtx* cctx;
@@ -777,7 +774,6 @@ ZEND_FUNCTION(zstd_uncompress_init)
 
 ZEND_FUNCTION(zstd_uncompress_add)
 {
-    zend_object *context;
     php_zstd_context *ctx;
     zend_string *input;
     smart_str out = {0};
