@@ -314,15 +314,6 @@ static zend_class_entry *php_zstd_uncompress_context_register_class(void)
     return class_entry;
 }
 
-static php_zstd_context* php_zstd_output_handler_context_init(void)
-{
-    php_zstd_context *ctx
-        = (php_zstd_context *) ecalloc(1, sizeof(php_zstd_context));
-    ctx->cctx = NULL;
-    ctx->dctx = NULL;
-    return ctx;
-}
-
 #define php_zstd_output_handler_context_free(ctx) php_zstd_context_free(ctx)
 
 /* One-shot functions */
@@ -1266,6 +1257,15 @@ static int APC_UNSERIALIZER_NAME(zstd)(APC_UNSERIALIZER_ARGS)
 #define PHP_ZSTD_ENCODING_ZSTD (1 << 0)
 #define PHP_ZSTD_ENCODING_DCZ (1 << 1)
 
+static php_zstd_context* php_zstd_output_handler_context_init(void)
+{
+    php_zstd_context *ctx
+        = (php_zstd_context *) ecalloc(1, sizeof(php_zstd_context));
+    ctx->cctx = NULL;
+    ctx->dctx = NULL;
+    return ctx;
+}
+
 static int php_zstd_output_encoding(void)
 {
     zval *enc;
@@ -2017,7 +2017,7 @@ static zend_function_entry zstd_functions[] = {
     ZEND_FE(ob_zstd_handler, arginfo_ob_zstd_handler)
 #endif
 
-    {NULL, NULL, NULL}
+    ZEND_FE_END
 };
 
 #if defined(HAVE_APCU_SUPPORT)
