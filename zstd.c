@@ -1402,7 +1402,7 @@ php_zstd_output_handler_load_dict(php_zstd_context *ctx)
 
             PHP_SHA256_CTX context;
             PHP_SHA256Init(&context);
-            PHP_SHA256Update(&context, ZSTR_VAL(data), ZSTR_LEN(data));
+            PHP_SHA256Update(&context, (const unsigned char *)ZSTR_VAL(data), ZSTR_LEN(data));
             PHP_SHA256Final(ctx->dict_digest, &context);
 
             zend_string *b64;
