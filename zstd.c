@@ -42,6 +42,8 @@
 #include <Zend/zend_interfaces.h>
 #include "php_zstd.h"
 
+# pragma GCC diagnostic ignored "-Wunicode"
+
 /* zstd */
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
