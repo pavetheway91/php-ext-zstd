@@ -42,6 +42,8 @@
 #include <Zend/zend_interfaces.h>
 #include "php_zstd.h"
 
+# pragma GCC diagnostic ignored "-Wunicode"
+
 /* zstd */
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
@@ -80,9 +82,6 @@ static zend_always_inline zend_string *smart_str_extract(smart_str *str) {
     UNEXPECTED(ZSTD_isError(result))
 
 zend_class_entry *zstd_context_ptr;
-static const zend_function_entry zstd_context_methods[] = {
-    ZEND_FE_END
-};
 
 struct _php_zstd_context {
     ZSTD_CCtx* cctx;
@@ -313,15 +312,6 @@ static zend_class_entry *php_zstd_uncompress_context_register_class(void)
 #endif
 
     return class_entry;
-}
-
-static php_zstd_context* php_zstd_output_handler_context_init(void)
-{
-    php_zstd_context *ctx
-        = (php_zstd_context *) ecalloc(1, sizeof(php_zstd_context));
-    ctx->cctx = NULL;
-    ctx->dctx = NULL;
-    return ctx;
 }
 
 #define php_zstd_output_handler_context_free(ctx) php_zstd_context_free(ctx)
@@ -775,7 +765,6 @@ ZEND_FUNCTION(zstd_uncompress_init)
 
 ZEND_FUNCTION(zstd_uncompress_add)
 {
-    zend_object *context;
     php_zstd_context *ctx;
     zend_string *input;
     smart_str out = {0};
@@ -1268,6 +1257,15 @@ static int APC_UNSERIALIZER_NAME(zstd)(APC_UNSERIALIZER_ARGS)
 #define PHP_ZSTD_ENCODING_ZSTD (1 << 0)
 #define PHP_ZSTD_ENCODING_DCZ (1 << 1)
 
+static php_zstd_context* php_zstd_output_handler_context_init(void)
+{
+    php_zstd_context *ctx
+        = (php_zstd_context *) ecalloc(1, sizeof(php_zstd_context));
+    ctx->cctx = NULL;
+    ctx->dctx = NULL;
+    return ctx;
+}
+
 static int php_zstd_output_encoding(void)
 {
     zval *enc;
@@ -1400,7 +1398,7 @@ php_zstd_output_handler_load_dict(php_zstd_context *ctx)
 
             PHP_SHA256_CTX context;
             PHP_SHA256Init(&context);
-            PHP_SHA256Update(&context, ZSTR_VAL(data), ZSTR_LEN(data));
+            PHP_SHA256Update(&context, (const unsigned char *)ZSTR_VAL(data), ZSTR_LEN(data));
             PHP_SHA256Final(ctx->dict_digest, &context);
 
             zend_string *b64;
@@ -2019,7 +2017,7 @@ static zend_function_entry zstd_functions[] = {
     ZEND_FE(ob_zstd_handler, arginfo_ob_zstd_handler)
 #endif
 
-    {NULL, NULL, NULL}
+    ZEND_FE_END
 };
 
 #if defined(HAVE_APCU_SUPPORT)
