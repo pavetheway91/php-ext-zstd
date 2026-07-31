@@ -88,6 +88,8 @@ zstd.output\_compression\_dict          | ""      | PHP\_INI\_ALL
 
 * zstd.output\_compression\_exclude\_types _string_
 
+    Extension contains a built-in list of uncompressible MIME types. The list can be found from phpinfo() output. If something is missing, more MIME types can be added with this ini setting.
+
     Comma-separated list of MIME types to exclude from transparent output
     compression, e.g. `"image/*,application/pdf"`. Both exact types
     (`application/pdf`) and wildcard subtypes (`image/*`) are supported.

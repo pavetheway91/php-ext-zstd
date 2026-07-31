@@ -41,6 +41,9 @@
 #include <Zend/zend_API.h>
 #include <Zend/zend_interfaces.h>
 #include "php_zstd.h"
+#if PHP_VERSION_ID >= 80000
+#include "php_zstd_mimetype_exclude.h"
+#endif
 
 # pragma GCC diagnostic ignored "-Wunicode"
 
@@ -1293,10 +1296,9 @@ static int php_zstd_output_encoding(void)
     return PHP_ZSTD_G(compression_coding);
 }
 
-static int php_zstd_output_mimetype_excluded(void)
+static int php_zstd_output_mimetype_excluded(const char *exclude)
 {
     const char *mimetype = SG(sapi_headers).mimetype;
-    const char *exclude = PHP_ZSTD_G(output_compression_exclude_types);
     const char *p, *end;
     size_t mimetype_len;
 
@@ -1556,7 +1558,11 @@ php_zstd_output_handler(void **handler_context,
     php_zstd_context *ctx = *(php_zstd_context **) handler_context;
 
     if ((output_context->op & PHP_OUTPUT_HANDLER_START)
-        && php_zstd_output_mimetype_excluded()) {
+        && (
+            php_zstd_output_mimetype_excluded(ZSTD_MIMETYPE_EXCLUDE)
+            ||
+            php_zstd_output_mimetype_excluded(PHP_ZSTD_G(output_compression_exclude_types))
+        )) {
         return FAILURE;
     }
 
@@ -1948,6 +1954,9 @@ ZEND_MINFO_FUNCTION(zstd)
     php_info_print_table_row(2, "Interface Version", ZSTD_VERSION_STRING);
 #if defined(HAVE_APCU_SUPPORT)
     php_info_print_table_row(2, "APCu serializer ABI", APC_SERIALIZER_ABI);
+#endif
+#if PHP_VERSION_ID >= 80000
+    php_info_print_table_row(2, "Built-in output compression exclusions", ZSTD_MIMETYPE_EXCLUDE);
 #endif
     php_info_print_table_end();
     DISPLAY_INI_ENTRIES();

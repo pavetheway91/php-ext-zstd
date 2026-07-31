@@ -13,7 +13,7 @@ HTTP_ACCEPT_ENCODING=zstd
 ob=021
 --FILE--
 <?php
-header('Content-Type: image/png');
+header('Content-Type: image/svg');
 echo "hi\n";
 ?>
 --EXPECT--
