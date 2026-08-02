@@ -1943,11 +1943,27 @@ ZEND_RSHUTDOWN_FUNCTION(zstd)
 ZEND_MINFO_FUNCTION(zstd)
 {
     php_info_print_table_start();
-    php_info_print_table_row(2, "Zstd support", "enabled");
-    php_info_print_table_row(2, "Extension Version", PHP_ZSTD_VERSION);
-    php_info_print_table_row(2, "Interface Version", ZSTD_VERSION_STRING);
+    php_info_print_table_row(2, "Extension version", PHP_ZSTD_VERSION);
+#if defined(HAVE_BUNDLED_ZSTD)
+    php_info_print_table_row(2, "Zstd library", "bundled");
+#else
+    php_info_print_table_row(2, "Zstd library", "external");
+#endif
+    php_info_print_table_row(2, "Zstd interface version", ZSTD_VERSION_STRING);
 #if defined(HAVE_APCU_SUPPORT)
-    php_info_print_table_row(2, "APCu serializer ABI", APC_SERIALIZER_ABI);
+    const char *serializer = zend_ini_string("apc.serializer", sizeof("apc.serializer")-1, 0);
+
+    if (serializer == NULL) {
+        php_info_print_table_row(2, "APCu serializer", "APCu extension not loaded");
+    } else if (strcmp(serializer, "zstd") == 0) {
+        php_info_print_table_row(2, "APCu serializer", "zstd active");
+    } else {
+        php_info_print_table_row(2, "APCu serializer", "zstd inactive");
+    }
+
+    php_info_print_table_row(2, "APCu serializer interface version", APC_SERIALIZER_ABI);
+#else
+    php_info_print_table_row(2, "APCu serializer support", "not built");
 #endif
     php_info_print_table_end();
     DISPLAY_INI_ENTRIES();
