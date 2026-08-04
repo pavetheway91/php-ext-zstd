@@ -6,7 +6,6 @@ include (dirname(__FILE__) . '/ob_skipif.inc');
 ?>
 --INI--
 zstd.output_compression=1
-zstd.output_compression_exclude_types=application/pdf
 --ENV--
 HTTP_ACCEPT_ENCODING=zstd
 --GET--

@@ -66,12 +66,38 @@ if (count($lines) >= 4) {
         echo ($lines[3] == 'APCu serializer support => not built') ? "Apcu OK\n" : "Fail: not built\n";
     }
 
-    /**
-     * TODO: test built-in header exclusion list
-     **/
+    if (PHP_VERSION_ID >= 80000) {
+        $search = 'Built-in output compression exclusions => ';
+        $mimeIndex = null;
+        // could be 4 or 5 depending on apcu
+        foreach([4, 5] as $index) {
+            if (isset($lines[$index]) && substr($lines[$index], 0, 42) == $search) {
+                $mimeIndex = $index;
+            }
+        }
+        if ($mimeIndex) {
+            $types = explode(', ', substr($lines[$mimeIndex], 42));
+            $invalidTypes = [];
+            foreach($types as $type) {
+                if (!preg_match('/^([a-z]+)\/(([a-z0-9\-\.]+)|\*)$/', $type)) {
+                    $invalidTypes[] = $type;
+                }
+            }
+            if ($invalidTypes) {
+                echo "Fail: " . implode(", ", $invalidTypes) . "\n";
+            } else {
+                echo "MIMEs OK\n";
+            }
+        } else {
+            echo "Fail\n";
+        }
+    } else {
+        echo "MIMEs OK\n";
+    }
 }
 --EXPECTF--
 Ext version OK
 Bundled/external zstd OK
 Zstd version OK
 Apcu OK
+MIMEs OK

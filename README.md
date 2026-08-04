@@ -88,11 +88,24 @@ zstd.output\_compression\_dict          | ""      | PHP\_INI\_ALL
 
 * zstd.output\_compression\_exclude\_types _string_
 
-    Comma-separated list of MIME types to exclude from transparent output
-    compression, e.g. `"image/*,application/pdf"`. Both exact types
-    (`application/pdf`) and wildcard subtypes (`image/*`) are supported.
-    The comparison ignores any parameters (such as `charset`) present in
-    the response's `Content-Type` header.
+    Extension contains a built-in list of non-compressible MIME types.
+    The list can be found from phpinfo() output. If something is
+    missing, more MIME types can be added with this ini setting.
+
+    Comma-separated list of MIME types that should not be
+    compressed by the transparent output handler.
+
+    Supports exact MIME type matches and wildcard family matches.
+    A wildcard entry must use the `type/*` form.
+
+    Example (both of these are already in the built-in list):
+
+    ```ini
+    zstd.output_compression_exclude_types="video/*,application/pdf"
+    ```
+
+    This is useful for already-compressed binary formats where
+    additional Zstd compression usually provides little benefit.
 
 * zstd.output\_compression\_dict _string_
 

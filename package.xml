@@ -32,6 +32,7 @@
    <file name="config.m4" role="src" />
    <file name="config.w32" role="src" />
    <file name="php_zstd.h" role="src" />
+   <file name="php_zstd_mimetype_exclude.h" role="src" />
    <file name="zstd.c" role="src" />
    <dir name="zstd">
     <file name="CHANGELOG" role="doc" />
